@@ -1,51 +1,42 @@
 #!/usr/bin/python3
-"""
-Contains method to determine the winner of a game
-of prime numbers.
-"""
-
-
-def prime_numbers_between(n):
-    """
-    calculate prime numbers between 1 and n
-    Args:
-        n (int): the number to calculate prime numbers up to
-    Returns:
-        int: the number of prime numbers between 1 and n
-    """
-    prime_numbers = 0
-
-    for i in range(2, n + 1):
-        is_prime = True
-        for j in range(2, i // 2 + 1):
-            if i % j == 0:
-                is_prime = False
-                break
-        if is_prime:
-            prime_numbers += 1
-    return prime_numbers
+"""0. Prime Game - Maria and Ben are playing a game"""
 
 
 def isWinner(x, nums):
+    """x - rounds
+    nums - numbers list
     """
-    Determines the winner of a game of prime numbers.
-    Args:
-        x (int): the number of rounds to play
-        nums (list): the list of numbers n to play
-    Returns:
-        string: the winner of the game (Ben or Maria)
-    """
-    if not x or not nums:
+    if x <= 0 or nums is None:
         return None
+    if x != len(nums):
+        return None
+
     ben = 0
     maria = 0
-    for i in range(x):
-        prime_nums = prime_numbers_between(nums[i])
-        if prime_nums % 2 == 0:
+
+    a = [1 for x in range(sorted(nums)[-1] + 1)]
+    a[0], a[1] = 0, 0
+    for i in range(2, len(a)):
+        rm_multiples(a, i)
+
+    for i in nums:
+        if sum(a[0:i + 1]) % 2 == 0:
             ben += 1
         else:
             maria += 1
-    if ben == maria:
-        return None
-    winner = "Ben" if ben > maria else "Maria"
-    return winner
+    if ben > maria:
+        return "Ben"
+    if maria > ben:
+        return "Maria"
+    return None
+
+
+def rm_multiples(ls, x):
+    """removes multiple
+    of primes
+    """
+    for i in range(2, len(ls)):
+        try:
+            ls[i * x] = 0
+        except (ValueError, IndexError):
+            break
